@@ -1,8 +1,9 @@
 import { makeAutoObservable } from 'mobx'
 
-export default class DeviceStore {
+export default class ItemStore {
     constructor() {
         this._category = []
+        this._products = []
         this._page = 1
         this._totalCount = 0
         this._limit = 8
@@ -10,8 +11,11 @@ export default class DeviceStore {
         makeAutoObservable(this)
     }
 
-    setTypes(category) {
+    setCategory(category) {
         this._category = category
+    }
+    setProducts(products) {
+        this._products = products
     }
     setPage(page) {
         this._page = page
@@ -28,6 +32,9 @@ export default class DeviceStore {
 
     get category() {
         return this._category
+    }
+    get products() {
+        return this._products
     }
     get page() {
         return this._page
