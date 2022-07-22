@@ -1,7 +1,7 @@
-import { BASKET, ITEM, SHOP } from './consts/paths'
-import Shop from './pages/Shop'
-import ItemPage from './pages/ItemPage'
+import { BASKET, ITEM_PAGE, SHOP } from './consts/paths'
 import Basket from './pages/Basket'
+import ItemPage from './pages/ItemPage'
+import Shop from './pages/Shop'
 
 export const routes = [
     {
@@ -9,7 +9,7 @@ export const routes = [
         Component: Shop,
     },
     {
-        path: ITEM + '/:id',
+        path: ITEM_PAGE + '/:id',
         Component: ItemPage,
     },
     {

@@ -8,6 +8,7 @@ export default class ItemStore {
         this._jewerely = {}
         this._menClothing = {}
         this._womanClothing = {}
+        this._oneItem = {}
         this._page = 1
         this._totalCount = 0
         this._limit = 8
@@ -33,6 +34,9 @@ export default class ItemStore {
     }
     setWomanClothing(womanClothing) {
         this._womanClothing = womanClothing
+    }
+    setOneItem(oneItem) {
+        this._oneItem = oneItem
     }
 
     setPage(page) {
@@ -66,6 +70,9 @@ export default class ItemStore {
     }
     get womanClothing() {
         return this._womanClothing
+    }
+    get oneItem() {
+        return this._oneItem
     }
 
     get page() {

@@ -1,3 +1,3 @@
 export const SHOP = '/'
-export const ITEM = '/item'
+export const ITEM_PAGE = '/item'
 export const BASKET = '/basket'

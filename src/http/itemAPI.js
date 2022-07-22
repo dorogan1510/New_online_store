@@ -27,3 +27,8 @@ export const fetchWomanClothing = async () => {
     const { data } = await $host.get(`products/category/women's clothing`)
     return data
 }
+
+export const fetchOneItem = async id => {
+    const { data } = await $host.get('products/' + id)
+    return data
+}

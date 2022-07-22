@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
 import { default as ItemList } from '../components/ItemsList'
+import NavBar from '../components/NavBar'
 import { fetchProducts } from '../http/itemAPI'
 
 const Shop = () => {
@@ -10,17 +11,19 @@ const Shop = () => {
 
     useEffect(() => {
         fetchProducts().then(data => item.setProducts(data))
-        // fetchCategory().then(data => item.setCategory(data))
-    }, [])
+    }, [item])
 
     return (
-        <Grid
-            container
-            spacing={{ xs: 2, md: 3, sm: 3 }}
-            columns={{ xs: 1, sm: 8, md: 12 }}
-        >
-            <ItemList />
-        </Grid>
+        <>
+            <NavBar />
+            <Grid
+                container
+                spacing={{ xs: 2, md: 3, sm: 3 }}
+                columns={{ xs: 1, sm: 8, md: 12 }}
+            >
+                <ItemList />
+            </Grid>
+        </>
     )
 }
 

@@ -6,11 +6,15 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ITEM_PAGE } from '../consts/paths'
+import '../styles.scss'
 import { Context } from './../index'
-import './Item.scss'
 
 export default observer(function ItemList() {
     const { item } = useContext(Context)
+
+    const navigate = useNavigate()
 
     return (
         <Grid
@@ -21,11 +25,14 @@ export default observer(function ItemList() {
         >
             {item.products.map(products => (
                 <Grid item xs={2} sm={4} md={4} key={products.id}>
-                    <Card sx={{ maxWidth: 345 }}>
+                    <Card
+                        onClick={() => navigate(ITEM_PAGE + '/' + products.id)}
+                        sx={{ maxWidth: 345 }}
+                    >
                         <CardActionArea>
                             <CardMedia
                                 component='img'
-                                height='140'
+                                height='240'
                                 image={products.image}
                                 alt='green iguana'
                             />
