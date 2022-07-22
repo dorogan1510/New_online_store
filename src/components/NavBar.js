@@ -1,28 +1,46 @@
-import React, { useContext, useEffect } from 'react'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
-import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
+import AppBar from '@mui/material/AppBar'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
-import { styled, alpha } from '@mui/material/styles'
-import { Context } from '..'
-import { fetchCategory } from '../http/itemAPI'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import { alpha, styled } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
 import { observer } from 'mobx-react-lite'
+import React, { useContext } from 'react'
+import { Context } from '..'
+import {
+    fetchElectronics,
+    fetchJewelery,
+    fetchManClothing,
+    fetchWomanClothing,
+} from '../http/itemAPI'
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
-const ResponsiveAppBar = () => {
+const NavBar = () => {
     const { item } = useContext(Context)
+
+    const showElectronics = () => {
+        fetchElectronics().then(data => item.setProducts(data))
+    }
+    const showJewerely = () => {
+        fetchJewelery().then(data => item.setProducts(data))
+    }
+    const showManClothing = () => {
+        fetchManClothing().then(data => item.setProducts(data))
+    }
+    const showWomanClothing = () => {
+        fetchWomanClothing().then(data => item.setProducts(data))
+    }
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -71,7 +89,6 @@ const ResponsiveAppBar = () => {
         color: 'inherit',
         '& .MuiInputBase-input': {
             padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(4)})`,
             transition: theme.transitions.create('width'),
             width: '100%',
@@ -182,15 +199,39 @@ const ResponsiveAppBar = () => {
                             display: { xs: 'none', md: 'flex' },
                         }}
                     >
-                        {item.category.map(name => (
+                        {/* {item.category.map(name => (
                             <Button
                                 key={name}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+
                             >
                                 {name}
                             </Button>
-                        ))}
+                        ))} */}
+                        <Button
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={showElectronics}
+                        >
+                            Electronics
+                        </Button>
+                        <Button
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={showJewerely}
+                        >
+                            Jewelery
+                        </Button>
+                        <Button
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={showManClothing}
+                        >
+                            Men's clothing
+                        </Button>
+                        <Button
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={showWomanClothing}
+                        >
+                            Women's clothing
+                        </Button>
                     </Box>
                     <Search sx={{ mr: 2 }}>
                         <SearchIconWrapper>
@@ -247,4 +288,4 @@ const ResponsiveAppBar = () => {
         </AppBar>
     )
 }
-export default observer(ResponsiveAppBar)
+export default observer(NavBar)

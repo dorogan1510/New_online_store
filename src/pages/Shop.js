@@ -1,22 +1,26 @@
-import React, { useContext, useEffect } from 'react'
-import { fetchCategory, fetchProducts } from '../http/itemAPI'
-import { Context } from '..'
+import Grid from '@mui/material/Grid'
 import { observer } from 'mobx-react-lite'
-import NavBar from '../components/NavBar'
-import ItemList from '../components/ItemsList'
+import React, { useContext, useEffect } from 'react'
+import { Context } from '..'
+import { default as ItemList } from '../components/ItemsList'
+import { fetchProducts } from '../http/itemAPI'
 
 const Shop = () => {
     const { item } = useContext(Context)
 
     useEffect(() => {
         fetchProducts().then(data => item.setProducts(data))
-        fetchCategory().then(data => item.setCategory(data))
+        // fetchCategory().then(data => item.setCategory(data))
     }, [])
 
     return (
-        <div>
+        <Grid
+            container
+            spacing={{ xs: 2, md: 3, sm: 3 }}
+            columns={{ xs: 1, sm: 8, md: 12 }}
+        >
             <ItemList />
-        </div>
+        </Grid>
     )
 }
 
