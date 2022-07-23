@@ -4,11 +4,13 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchOneItem } from '../http/itemAPI'
+import { fetchAddToBasket, fetchOneItem } from '../http/itemAPI'
+import { Context } from './../index'
 
 const ItemPage = () => {
+    const { item } = useContext(Context)
     const [oneItem, setOneItem] = useState({ info: [] })
     const { id } = useParams()
 
@@ -17,6 +19,10 @@ const ItemPage = () => {
             .then(data => setOneItem(data))
             .catch(data => console.log(data))
     }, [id])
+
+    const addToBasket = (productId, quantity) => {
+        fetchAddToBasket(productId, quantity).then(data => item.setBasket(data))
+    }
 
     return (
         <>
@@ -32,9 +38,14 @@ const ItemPage = () => {
                         minWidth: '50px',
                     }}
                 >
-                    <img src={oneItem.image} height='100%' width='100%' />
+                    <img
+                        alt=''
+                        src={oneItem.image}
+                        height='100%'
+                        width='100%'
+                    />
                 </Grid>
-                <Grid xs={0} sm={0} md={2} />
+                <Grid xs={0} sm={0} md={2} item />
                 <Grid
                     xs={5}
                     sm={5}
@@ -60,8 +71,9 @@ const ItemPage = () => {
                         }}
                     >
                         <div>Category:</div>
-                        {oneItem.category.charAt(0).toUpperCase() +
-                            oneItem.category.slice(1)}
+                        {oneItem.category}
+                        {/* {oneItem.category.charAt(0).toUpperCase() +
+                            oneItem.category.slice(1)} */}
                     </Grid>
 
                     <Typography
@@ -86,6 +98,7 @@ const ItemPage = () => {
 
                     <Box>
                         <Button
+                            onClick={addToBasket(id, 1)}
                             variant='contained'
                             startIcon={<ShoppingCartRoundedIcon />}
                         >

@@ -3,11 +3,10 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
 import { default as ItemList } from '../components/ItemsList'
-import NavBar from '../components/NavBar'
 import { fetchProducts } from '../http/itemAPI'
 
 const Shop = () => {
-    const { item } = useContext(Context)
+    const { item, user } = useContext(Context)
 
     useEffect(() => {
         fetchProducts().then(data => item.setProducts(data))
@@ -15,7 +14,6 @@ const Shop = () => {
 
     return (
         <>
-            <NavBar />
             <Grid
                 container
                 spacing={{ xs: 2, md: 3, sm: 3 }}
