@@ -27,9 +27,11 @@ const Auth = () => {
 
     const handleSubmit = async event => {
         event.preventDefault()
-        // await fetchLogin(login, password).then(data => console.log(data))
-        await fetchLogin(login, password).then(data => user.setUser(data))
-        console.log(user.user.token)
+        await fetchLogin(login, password)
+            .then(data => user.setUser(data))
+            .catch(() => {
+                setIsLogin(true)
+            })
         if (
             user.user.token !== undefined &&
             user.user.token !== '' &&
@@ -38,8 +40,6 @@ const Auth = () => {
             user.setIsAuth(true)
             navigate(SHOP)
             localStorage.setItem('token', user.user.token)
-        } else {
-            setIsLogin(true)
         }
     }
 
@@ -74,9 +74,12 @@ const Auth = () => {
                             id='login'
                             label='Login'
                             name='login'
+                            autoFocus
                             onChange={e => setLogin(e.target.value)}
                         />
                         <TextField
+                            error={isLogin ? true : false}
+                            helperText={isLogin ? 'Incorrect password' : ''}
                             margin='normal'
                             required
                             fullWidth

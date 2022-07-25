@@ -13,6 +13,7 @@ export default class ItemStore {
         this._totalCount = 0
         this._limit = 8
         this._basket = []
+        this._basketItems = []
         makeAutoObservable(this)
     }
 
@@ -51,6 +52,9 @@ export default class ItemStore {
     setBasket(basket) {
         this._basket = basket
     }
+    setBasketItems(basketItems) {
+        this._basketItems = basketItems
+    }
 
     get category() {
         return this._category
@@ -86,5 +90,8 @@ export default class ItemStore {
     }
     get basket() {
         return this._basket
+    }
+    get basketItems() {
+        return this._basketItems
     }
 }

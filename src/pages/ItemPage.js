@@ -3,7 +3,6 @@ import { Rating, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchAddToBasket, fetchOneItem } from '../http/itemAPI'
@@ -14,14 +13,40 @@ const ItemPage = () => {
     const [oneItem, setOneItem] = useState({ info: [] })
     const { id } = useParams()
 
+    const [basketProductId, setBasketProductId] = useState(0)
+    const [basketQuantity, setBasketQuantity] = useState(0)
+    const [basketItems, setBasketItems] = useState([])
+
     useEffect(() => {
         fetchOneItem(id)
             .then(data => setOneItem(data))
             .catch(data => console.log(data))
     }, [id])
 
-    const addToBasket = (productId, quantity) => {
-        fetchAddToBasket(productId, quantity).then(data => item.setBasket(data))
+    // const kl = () => {
+    //     localStorage.setItem('productId', JSON.stringify(item.basket.products))
+    //     // localStorage.setItem('quantity', item.basket.products[0].quantity)
+    //     // localStorage.setItem('sdfsd', JSON.stringify({ i: 1, u: 3 }))
+    // }
+
+    const addToBasket = async (userId, productId, quantity) => {
+        await fetchAddToBasket(userId, productId, quantity).then(data =>
+            item.setBasket(data)
+        )
+        console.log(item.basket)
+    }
+
+    // localStorage.setItem('productId', JSON.stringify(item.basket.products))
+    // }
+
+    const i = { i: 2, u: 3 }
+    const u = { i: 2, u: 3 }
+    const sum = () => {
+        const m = {
+            i: i.i,
+            u: u.u + i.u,
+        }
+        return m
     }
 
     return (
@@ -98,7 +123,7 @@ const ItemPage = () => {
 
                     <Box>
                         <Button
-                            onClick={addToBasket(id, 1)}
+                            onClick={() => addToBasket(1, id, 1)}
                             variant='contained'
                             startIcon={<ShoppingCartRoundedIcon />}
                         >
@@ -121,4 +146,4 @@ const ItemPage = () => {
     )
 }
 
-export default observer(ItemPage)
+export default ItemPage

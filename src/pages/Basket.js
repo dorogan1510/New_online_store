@@ -1,14 +1,25 @@
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded'
-import { Rating, Typography } from '@mui/material'
+import { Autocomplete, Rating, TextField, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
+import { fetchBasketItems } from '../http/itemAPI'
+import { observer } from 'mobx-react-lite'
 
 const Basket = () => {
     const { item } = useContext(Context)
+
+    useEffect(() => {
+        fetchBasketItems()
+            .then(data => item.setBasketItems(data))
+            .catch(data => console.log(data))
+    }, [])
+
+    // console.log(item.basketItems)
     // console.log(item.basket.products[0].productId)
+    // console.log(item.basket.products[0].quantity)
 
     return (
         <>
@@ -86,4 +97,4 @@ const Basket = () => {
     )
 }
 
-export default Basket
+export default observer(Basket)

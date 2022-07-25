@@ -22,32 +22,55 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '..'
-import { AUTH, BASKET } from '../consts/paths'
 import {
-    fetchElectronics,
-    fetchJewelery,
-    fetchManClothing,
-    fetchWomanClothing,
-} from '../http/itemAPI'
-
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+    AUTH,
+    BASKET,
+    ELECTRONICS,
+    JEWERELY,
+    MENCLOTHING,
+    WOMENCLOTHING,
+} from '../consts/paths'
+import Fuse from 'fuse.js'
+import { fetchProducts } from '../http/itemAPI'
 
 const NavBar = () => {
     const navigate = useNavigate()
 
     const { item, user } = useContext(Context)
 
+    const searchData = pattern => {
+        if (!pattern) {
+            fetchProducts().then(data => item.setProducts(data))
+            return
+        }
+
+        const fuse = new Fuse(item.products, {
+            keys: ['title', 'description'],
+        })
+
+        const result = fuse.search(pattern)
+        const matches = []
+        if (!result.length) {
+            item.setProducts([])
+        } else {
+            result.forEach(({ item }) => {
+                matches.push(item)
+            })
+            item.setProducts(matches)
+        }
+    }
+
     const showElectronics = () => {
-        fetchElectronics().then(data => item.setProducts(data))
+        navigate(ELECTRONICS)
     }
     const showJewerely = () => {
-        fetchJewelery().then(data => item.setProducts(data))
+        navigate(JEWERELY)
     }
-    const showManClothing = () => {
-        fetchManClothing().then(data => item.setProducts(data))
+    const showMenClothing = () => {
+        navigate(MENCLOTHING)
     }
-    const showWomanClothing = () => {
-        fetchWomanClothing().then(data => item.setProducts(data))
+    const showWomenClothing = () => {
+        navigate(WOMENCLOTHING)
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -114,6 +137,16 @@ const NavBar = () => {
             },
         },
     }))
+
+    const top100Films = [
+        { title: 'The Shawshank Redemption', year: 1994 },
+        { title: 'The Godfather', year: 1972 },
+        { title: 'The Godfather: Part II', year: 1974 },
+        { title: 'The Dark Knight', year: 2008 },
+        { title: '12 Angry Men', year: 1957 },
+        { title: "Schindler's List", year: 1993 },
+        { title: 'Pulp Fiction', year: 1994 },
+    ]
 
     return (
         <AppBar position='static'>
@@ -213,15 +246,6 @@ const NavBar = () => {
                             display: { xs: 'none', md: 'flex' },
                         }}
                     >
-                        {/* {item.category.map(name => (
-                            <Button
-                                key={name}
-                                onClick={handleCloseNavMenu}
-
-                            >
-                                {name}
-                            </Button>
-                        ))} */}
                         <Button
                             sx={{ my: 2, color: 'white', display: 'block' }}
                             onClick={showElectronics}
@@ -236,13 +260,13 @@ const NavBar = () => {
                         </Button>
                         <Button
                             sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showManClothing}
+                            onClick={showMenClothing}
                         >
                             Men's clothing
                         </Button>
                         <Button
                             sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showWomanClothing}
+                            onClick={showWomenClothing}
                         >
                             Women's clothing
                         </Button>
@@ -254,10 +278,10 @@ const NavBar = () => {
                         <StyledInputBase
                             placeholder='Search…'
                             inputProps={{ 'aria-label': 'search' }}
-                        />
+                            onChange={e => searchData(e.target.value)}
+                        ></StyledInputBase>
                     </Search>
 
-                    {/* UserIcon */}
                     {user.isAuth ? (
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title='Open settings'>
@@ -300,15 +324,13 @@ const NavBar = () => {
                         </Button>
                     )}
 
-                    {/* UserLogin */}
-
                     <IconButton
                         onClick={() => navigate(BASKET)}
                         size='large'
                         aria-label='show 4 new mails'
                         color='inherit'
                     >
-                        <Badge badgeContent={4} color='error'>
+                        <Badge badgeContent={0} color='error'>
                             <ShoppingCartRoundedIcon />
                         </Badge>
                     </IconButton>
