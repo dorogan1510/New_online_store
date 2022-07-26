@@ -5,13 +5,21 @@ export const fetchCategory = async () => {
     return data
 }
 
-export const fetchProducts = async () => {
-    const { data } = await $host.get('products')
+export const fetchProducts = async limitItems => {
+    const { data } = await $host.get('products', {
+        params: {
+            limitItems,
+        },
+    })
     return data
 }
 
-export const fetchElectronics = async () => {
-    const { data } = await $host.get('products/category/electronics')
+export const fetchElectronics = async limitItems => {
+    const { data } = await $host.get('products/category/electronics', {
+        params: {
+            limitItems,
+        },
+    })
     return data
 }
 

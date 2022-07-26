@@ -3,6 +3,7 @@ import { Context } from '..'
 import { fetchJewelery } from '../http/itemAPI'
 import { Grid } from '@mui/material'
 import ItemsList from '../components/ItemsList'
+import Pages from '../components/Pages'
 
 const Jewerely = () => {
     const { item } = useContext(Context)
@@ -19,6 +20,7 @@ const Jewerely = () => {
                 columns={{ xs: 1, sm: 8, md: 12 }}
             >
                 <ItemsList />
+                <Pages />
             </Grid>
         </>
     )
