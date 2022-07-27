@@ -7,10 +7,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchAddToBasket, fetchOneItem } from '../http/itemAPI'
 import { Context } from './../index'
+import { observer } from 'mobx-react-lite'
 
 const ItemPage = () => {
     const { item } = useContext(Context)
-    const [oneItem, setOneItem] = useState({ info: [] })
     const { id } = useParams()
 
     const [basketProductId, setBasketProductId] = useState(0)
@@ -19,34 +19,31 @@ const ItemPage = () => {
 
     useEffect(() => {
         fetchOneItem(id)
-            .then(data => setOneItem(data))
+            .then(data => item.setOneItem(data))
             .catch(data => console.log(data))
     }, [id])
 
-    // const kl = () => {
-    //     localStorage.setItem('productId', JSON.stringify(item.basket.products))
-    //     // localStorage.setItem('quantity', item.basket.products[0].quantity)
-    //     // localStorage.setItem('sdfsd', JSON.stringify({ i: 1, u: 3 }))
-    // }
+    const addToBasket = () => {
+        item.oneItem.quantity = 1
 
-    const addToBasket = async (userId, productId, quantity) => {
-        await fetchAddToBasket(userId, productId, quantity).then(data =>
-            item.setBasket(data)
-        )
-        console.log(item.basket)
-    }
+        const exist = item.basketItems.find(x => x.id === item.oneItem.id)
 
-    // localStorage.setItem('productId', JSON.stringify(item.basket.products))
-    // }
-
-    const i = { i: 2, u: 3 }
-    const u = { i: 2, u: 3 }
-    const sum = () => {
-        const m = {
-            i: i.i,
-            u: u.u + i.u,
+        if (exist) {
+            item.setBasketItems(
+                item.basketItems.map(x =>
+                    x.id === item.oneItem.id
+                        ? { ...exist, quantity: exist.quantity + 1 }
+                        : x
+                )
+            )
+            localStorage.setItem('basket', JSON.stringify(item.basketItems))
+        } else {
+            item.setBasketItems([
+                ...item.basketItems,
+                { ...item.oneItem, quantity: 1 },
+            ])
+            localStorage.setItem('basket', JSON.stringify(item.basketItems))
         }
-        return m
     }
 
     return (
@@ -65,7 +62,7 @@ const ItemPage = () => {
                 >
                     <img
                         alt=''
-                        src={oneItem.image}
+                        src={item.oneItem.image}
                         height='100%'
                         width='100%'
                     />
@@ -90,15 +87,14 @@ const ItemPage = () => {
                         item
                         sx={{
                             color: 'primary.main',
-                            fontSize: '2rem',
+                            fontSize: '1.8rem',
                             fontWeight: 700,
                             textDecoration: '',
                         }}
                     >
-                        <div>Category:</div>
-                        {oneItem.category}
-                        {/* {oneItem.category.charAt(0).toUpperCase() +
-                            oneItem.category.slice(1)} */}
+                        Category: {item.oneItem.category}
+                        {/* {item.oneItem.category.charAt(0).toUpperCase() +
+                            item.oneItem.category.slice(1)} */}
                     </Grid>
 
                     <Typography
@@ -109,21 +105,22 @@ const ItemPage = () => {
                             fontSize: '2rem',
                         }}
                     >
-                        {oneItem.title}
+                        {item.oneItem.title}
                     </Typography>
-                    <Grid
+                    <Typography
                         sx={{
                             color: 'primary.main',
                             fontSize: '2rem',
-                            fontWeight: 700,
+                            fontWeight: 600,
                         }}
+                        paragraph
                     >
-                        {oneItem.price}$
-                    </Grid>
+                        ${item.oneItem.price}
+                    </Typography>
 
                     <Box>
                         <Button
-                            onClick={() => addToBasket(1, id, 1)}
+                            onClick={() => addToBasket(item.oneItem)}
                             variant='contained'
                             startIcon={<ShoppingCartRoundedIcon />}
                         >
@@ -138,7 +135,7 @@ const ItemPage = () => {
                         item
                     >
                         <h3>Description:</h3>
-                        {oneItem.description}
+                        {item.oneItem.description}
                     </Grid>
                 </Grid>
             </Grid>
@@ -146,4 +143,4 @@ const ItemPage = () => {
     )
 }
 
-export default ItemPage
+export default observer(ItemPage)
