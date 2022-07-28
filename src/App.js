@@ -1,27 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { Container, createTheme, ThemeProvider } from '@mui/material'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
 import NavBar from './components/NavBar'
-import { Context } from './index'
+import { blue, orange } from '@mui/material/colors'
 
 const App = () => {
-    const { item, user } = useContext(Context)
-
-    // useEffect(() => {
-    //     if (
-    //         localStorage.getItem('token') !== '' &&
-    //         localStorage.getItem('token') !== undefined &&
-    //         localStorage.getItem('token')
-    //     ) {
-    //         user.setIsAuth(true)
-    //     }
-    // }, [])
+    const myTheme = createTheme({
+        palette: {
+            primary: {
+                main: blue[800],
+            },
+            secondary: {
+                main: orange[500],
+            },
+        },
+    })
 
     return (
-        <BrowserRouter>
-            <NavBar />
-            <AppRouter />
-        </BrowserRouter>
+        <ThemeProvider theme={myTheme}>
+            <BrowserRouter>
+                <NavBar />
+                <Container maxWidth='xl'>
+                    <AppRouter />
+                </Container>
+            </BrowserRouter>
+        </ThemeProvider>
     )
 }
 

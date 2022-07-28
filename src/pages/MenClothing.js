@@ -9,7 +9,11 @@ const MenClothing = () => {
     const { item } = useContext(Context)
 
     useEffect(() => {
-        fetchMenClothing().then(data => item.setProducts(data))
+        fetchMenClothing().then(data => {
+            item.setProducts(data)
+            item.setTotalCount(data.length)
+        })
+        item.setPage(1)
     }, [item])
 
     return (

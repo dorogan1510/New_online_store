@@ -28,10 +28,11 @@ import {
     ELECTRONICS,
     JEWERELY,
     MENCLOTHING,
+    SHOP,
     WOMENCLOTHING,
 } from '../consts/paths'
 import Fuse from 'fuse.js'
-import { fetchElectronics, fetchProducts } from '../http/itemAPI'
+import { fetchProducts } from '../http/itemAPI'
 
 const NavBar = () => {
     const navigate = useNavigate()
@@ -40,7 +41,11 @@ const NavBar = () => {
 
     const searchData = pattern => {
         if (!pattern) {
-            fetchProducts().then(data => item.setProducts(data))
+            fetchProducts().then(data => {
+                item.setProducts(data)
+                item.setTotalCount(data.length)
+            })
+
             return
         }
 
@@ -57,14 +62,11 @@ const NavBar = () => {
                 matches.push(item)
             })
             item.setProducts(matches)
+            item.setTotalCount(item.products.length)
         }
     }
 
-    const showElectronics = async () => {
-        await fetchElectronics(6).then(data => {
-            item.setProducts(data)
-            item.setTotalCount(data.length)
-        })
+    const showElectronics = () => {
         navigate(ELECTRONICS)
     }
     const showJewerely = () => {
@@ -75,6 +77,13 @@ const NavBar = () => {
     }
     const showWomenClothing = () => {
         navigate(WOMENCLOTHING)
+    }
+    const showAll = () => {
+        fetchProducts(6).then(data => {
+            item.setProducts(data)
+            item.setTotalCount(data.length)
+        })
+        navigate(SHOP)
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -100,6 +109,11 @@ const NavBar = () => {
         user.setIsAuth(false)
         handleCloseUserMenu()
     }
+
+    const itemsQuantity = item.basketItems.reduce(
+        (prev, current) => prev + current.quantity,
+        0
+    )
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -143,194 +157,222 @@ const NavBar = () => {
     }))
 
     return (
-        <AppBar position='static'>
-            <Container maxWidth='xl'>
-                <Toolbar disableGutters>
-                    <AdbIcon
-                        sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
-                    />
-                    <Typography
-                        variant='h6'
-                        noWrap
-                        component='a'
-                        href='/'
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
-
-                    <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: 'flex', md: 'none' },
-                        }}
-                    >
-                        <IconButton
-                            size='large'
-                            aria-label='account of current user'
-                            aria-controls='menu-appbar'
-                            aria-haspopup='true'
-                            onClick={handleOpenNavMenu}
-                            color='inherit'
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id='menu-appbar'
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+        <Box>
+            <AppBar position='static'>
+                <Container maxWidth='xl'>
+                    <Toolbar disableGutters>
+                        <AdbIcon
+                            onClick={showAll}
                             sx={{
-                                display: { xs: 'block', md: 'none' },
+                                display: { xs: 'none', md: 'flex' },
+                                mr: 1,
+                                cursor: 'pointer',
+                            }}
+                        />
+                        <Typography
+                            variant='h6'
+                            noWrap
+                            component='a'
+                            onClick={showAll}
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'none', md: 'flex' },
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                                cursor: 'pointer',
                             }}
                         >
-                            {item.category.map(name => (
-                                <MenuItem
-                                    key={name}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Typography textAlign='center'>
-                                        {name}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
-                    <AdbIcon
-                        sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}
-                    />
+                            LOGO
+                        </Typography>
 
-                    <Typography
-                        variant='h5'
-                        noWrap
-                        component='a'
-                        href=''
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    ></Typography>
-
-                    <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: 'none', md: 'flex' },
-                        }}
-                    >
-                        <Button
-                            sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showElectronics}
+                        <Box
+                            sx={{
+                                flexGrow: 1,
+                                display: { xs: 'flex', md: 'none' },
+                            }}
                         >
-                            Electronics
-                        </Button>
-                        <Button
-                            sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showJewerely}
-                        >
-                            Jewelery
-                        </Button>
-                        <Button
-                            sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showMenClothing}
-                        >
-                            Men's clothing
-                        </Button>
-                        <Button
-                            sx={{ my: 2, color: 'white', display: 'block' }}
-                            onClick={showWomenClothing}
-                        >
-                            Women's clothing
-                        </Button>
-                    </Box>
-                    <Search sx={{ mr: 2 }}>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder='Search…'
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={e => searchData(e.target.value)}
-                        ></StyledInputBase>
-                    </Search>
-
-                    {user.isAuth ? (
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title='Open settings'>
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    sx={{ p: 0 }}
-                                >
-                                    <Avatar
-                                        alt='Remy Sharp'
-                                        src='/static/images/avatar/2.jpg'
-                                    />
-                                </IconButton>
-                            </Tooltip>
+                            <IconButton
+                                size='large'
+                                aria-label='account of current user'
+                                aria-controls='menu-appbar'
+                                aria-haspopup='true'
+                                onClick={handleOpenNavMenu}
+                                color='inherit'
+                            >
+                                <MenuIcon />
+                            </IconButton>
                             <Menu
-                                sx={{ mt: '45px' }}
                                 id='menu-appbar'
-                                anchorEl={anchorElUser}
+                                anchorEl={anchorElNav}
                                 anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
                                 }}
                                 keepMounted
                                 transformOrigin={{
                                     vertical: 'top',
-                                    horizontal: 'right',
+                                    horizontal: 'left',
                                 }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
+                                open={Boolean(anchorElNav)}
+                                onClose={handleCloseNavMenu}
+                                sx={{
+                                    display: { xs: 'block', md: 'none' },
+                                }}
                             >
-                                <MenuItem onClick={logout}>
+                                <MenuItem onClick={() => navigate(ELECTRONICS)}>
                                     <Typography textAlign='center'>
-                                        Logout
+                                        Electronics
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem onClick={() => navigate(JEWERELY)}>
+                                    <Typography textAlign='center'>
+                                        Jewerely
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem onClick={() => navigate(MENCLOTHING)}>
+                                    <Typography textAlign='center'>
+                                        Men's clothing
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => navigate(WOMENCLOTHING)}
+                                >
+                                    <Typography textAlign='center'>
+                                        Women's Clothing
                                     </Typography>
                                 </MenuItem>
                             </Menu>
                         </Box>
-                    ) : (
-                        <Button onClick={() => navigate(AUTH)} color='inherit'>
-                            Login
-                        </Button>
-                    )}
+                        <AdbIcon
+                            sx={{
+                                display: { xs: 'flex', md: 'none' },
+                                mr: 1,
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => navigate(SHOP)}
+                        />
 
-                    <IconButton
-                        onClick={() => navigate(BASKET)}
-                        size='large'
-                        aria-label='show 4 new mails'
-                        color='inherit'
-                    >
-                        <Badge badgeContent={0} color='error'>
-                            <ShoppingCartRoundedIcon />
-                        </Badge>
-                    </IconButton>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                        <Typography
+                            variant='h5'
+                            noWrap
+                            component='a'
+                            href=''
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'flex', md: 'none' },
+                                flexGrow: 1,
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                            }}
+                        ></Typography>
+
+                        <Box
+                            sx={{
+                                flexGrow: 1,
+                                display: { xs: 'none', md: 'flex' },
+                            }}
+                        >
+                            <Button
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                onClick={showElectronics}
+                            >
+                                Electronics
+                            </Button>
+                            <Button
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                onClick={showJewerely}
+                            >
+                                Jewelery
+                            </Button>
+                            <Button
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                onClick={showMenClothing}
+                            >
+                                Men's clothing
+                            </Button>
+                            <Button
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                onClick={showWomenClothing}
+                            >
+                                Women's clothing
+                            </Button>
+                        </Box>
+                        <Search sx={{ mr: 2 }}>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder='Search…'
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={e => searchData(e.target.value)}
+                            ></StyledInputBase>
+                        </Search>
+
+                        {user.isAuth ? (
+                            <Box sx={{ flexGrow: 0 }}>
+                                <Tooltip title='Open settings'>
+                                    <IconButton
+                                        onClick={handleOpenUserMenu}
+                                        sx={{ p: 0 }}
+                                    >
+                                        <Avatar
+                                            alt='Remy Sharp'
+                                            src='/static/images/avatar/2.jpg'
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id='menu-appbar'
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    <MenuItem onClick={logout}>
+                                        <Typography textAlign='center'>
+                                            Logout
+                                        </Typography>
+                                    </MenuItem>
+                                </Menu>
+                            </Box>
+                        ) : (
+                            <Button
+                                onClick={() => navigate(AUTH)}
+                                color='inherit'
+                            >
+                                Login
+                            </Button>
+                        )}
+
+                        <IconButton
+                            onClick={() => navigate(BASKET)}
+                            size='large'
+                            aria-label='show 4 new mails'
+                            color='inherit'
+                        >
+                            <Badge badgeContent={itemsQuantity} color='error'>
+                                <ShoppingCartRoundedIcon />
+                            </Badge>
+                        </IconButton>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+        </Box>
     )
 }
 export default observer(NavBar)

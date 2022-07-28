@@ -1,6 +1,8 @@
+import { CircularProgress } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import { Box } from '@mui/system'
 import { observer } from 'mobx-react-lite'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
 import { default as ItemList } from '../components/ItemsList'
 import Pages from '../components/Pages'
@@ -10,30 +12,35 @@ const Shop = () => {
     const { item } = useContext(Context)
 
     useEffect(() => {
-        fetchProducts(6).then(data => {
-            item.setProducts(data)
-            item.setTotalCount(data.length)
-        })
-    }, [])
+        fetchProducts(6)
+            .then(data => {
+                item.setProducts(data)
+                item.setTotalCount(data.length)
+            })
+            .finally(() => item.setLoading(false))
+    })
 
-    // const indexOfLastPost = item.page * item.limitItems
-    // const indexOfFirstPost = indexOfLastPost - item.limitItems
-    // const currentPosts = item.products.slice(indexOfFirstPost, indexOfLastPost)
-
-    // const paginate = pageNumber => item.setPage(pageNumber)
-
-    // console.log(item.page)
-
+    if (item.loading) {
+        return (
+            <CircularProgress
+                size={40}
+                sx={{ display: 'block', margin: '5rem auto' }}
+            />
+        )
+    }
     return (
         <>
-            <Grid
-                container
-                spacing={{ xs: 2, md: 3, sm: 3 }}
-                columns={{ xs: 1, sm: 8, md: 12 }}
-            >
-                <ItemList />
-                <Pages />
-            </Grid>
+            <Box>
+                <Grid
+                    container
+                    spacing={{ xs: 2, md: 3, sm: 3 }}
+                    columns={{ xs: 1, sm: 8, md: 12 }}
+                    sx={{ flexDirection: 'column' }}
+                >
+                    <ItemList />
+                    <Pages />
+                </Grid>
+            </Box>
         </>
     )
 }

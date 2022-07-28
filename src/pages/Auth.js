@@ -17,7 +17,7 @@ import { Context } from './../index'
 const theme = createTheme()
 
 const Auth = () => {
-    const { item, user } = useContext(Context)
+    const { user } = useContext(Context)
 
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')

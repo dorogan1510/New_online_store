@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
 import { fetchElectronics } from '../http/itemAPI'
 import { Grid } from '@mui/material'
@@ -8,28 +8,13 @@ import Pages from '../components/Pages'
 const Electronics = () => {
     const { item } = useContext(Context)
 
-    // useEffect(() => {
-    //     fetchElectronics(6).then(data => item.setProducts(data))
-    // }, [item])
-    // const [currentPage, setCurrentPage] = useState(1)
-
-    // const indexOfLastPost = currentPage * item.limitItems
-    // const indexOfFirstPost = indexOfLastPost - item.limitItems
-    // const currentPosts = item.products.slice(indexOfFirstPost, indexOfLastPost)
-    // const paginate = pageNumber => setCurrentPage(pageNumber)
-
     useEffect(() => {
         fetchElectronics(6).then(data => {
             item.setProducts(data)
             item.setTotalCount(data.length)
         })
+        item.setPage(1)
     }, [])
-
-    // const indexOfLastPost = item.page * item.limitItems
-    // const indexOfFirstPost = indexOfLastPost - item.limitItems
-    // const currentPosts = item.products.slice(indexOfFirstPost, indexOfLastPost)
-
-    console.log(item.page)
 
     return (
         <>

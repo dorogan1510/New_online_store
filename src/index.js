@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import DeviceStore from './store/ItemStore'
 import UserStore from './store/UserStore'
+import './styles.scss'
 
 export const Context = createContext(null)
 

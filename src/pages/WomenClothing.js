@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Context } from '..'
-import { fetchManClothing, fetchWomenClothing } from '../http/itemAPI'
+import { fetchWomenClothing } from '../http/itemAPI'
 import { Grid } from '@mui/material'
 import ItemsList from '../components/ItemsList'
 import Pages from '../components/Pages'
@@ -9,7 +9,11 @@ const WomenClothing = () => {
     const { item } = useContext(Context)
 
     useEffect(() => {
-        fetchWomenClothing().then(data => item.setProducts(data))
+        fetchWomenClothing().then(data => {
+            item.setProducts(data)
+            item.setTotalCount(data.length)
+        })
+        item.setPage(1)
     }, [item])
 
     return (

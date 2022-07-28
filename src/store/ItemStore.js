@@ -2,19 +2,24 @@ import { makeAutoObservable } from 'mobx'
 
 export default class ItemStore {
     constructor() {
+        this._loading = true
         this._category = []
         this._products = []
         this._electronics = {}
         this._jewerely = {}
         this._menClothing = {}
         this._womanClothing = {}
-        this._oneItem = {}
+        this._oneItem = { info: [] }
         this._page = 1
         this._totalCount = 0
         this._limitItems = 6
         this._basket = []
         this._basketItems = []
         makeAutoObservable(this)
+    }
+
+    setLoading(loading) {
+        this._loading = loading
     }
 
     setCategory(category) {
@@ -55,6 +60,10 @@ export default class ItemStore {
     }
     setBasketItems(basketItems) {
         this._basketItems = basketItems
+    }
+
+    get loading() {
+        return this._loading
     }
 
     get category() {

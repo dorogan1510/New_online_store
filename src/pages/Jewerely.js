@@ -9,7 +9,11 @@ const Jewerely = () => {
     const { item } = useContext(Context)
 
     useEffect(() => {
-        fetchJewelery().then(data => item.setProducts(data))
+        fetchJewelery().then(data => {
+            item.setProducts(data)
+            item.setTotalCount(data.length)
+        })
+        item.setPage(1)
     }, [item])
 
     return (

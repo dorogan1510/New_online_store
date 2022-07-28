@@ -1,21 +1,17 @@
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded'
-import { Rating, Typography } from '@mui/material'
+import { Paper, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchAddToBasket, fetchOneItem } from '../http/itemAPI'
+import { fetchOneItem } from '../http/itemAPI'
 import { Context } from './../index'
 import { observer } from 'mobx-react-lite'
 
 const ItemPage = () => {
     const { item } = useContext(Context)
     const { id } = useParams()
-
-    const [basketProductId, setBasketProductId] = useState(0)
-    const [basketQuantity, setBasketQuantity] = useState(0)
-    const [basketItems, setBasketItems] = useState([])
 
     useEffect(() => {
         fetchOneItem(id)
@@ -48,97 +44,91 @@ const ItemPage = () => {
 
     return (
         <>
-            <Grid container component='main' sx={{ height: '100vh' }}>
+            <Box sx={{ margin: '0 auto', maxWidth: 1536 }}>
                 <Grid
-                    item
-                    xs={3}
-                    sm={4}
-                    md={4}
+                    container
+                    spacing={6}
                     sx={{
-                        padding: '2rem',
-                        minHeight: '100px',
-                        minWidth: '50px',
+                        marginTop: '1rem',
+                        padding: '1rem',
                     }}
                 >
-                    <img
-                        alt=''
-                        src={item.oneItem.image}
-                        height='100%'
-                        width='100%'
-                    />
-                </Grid>
-                <Grid xs={0} sm={0} md={2} item />
-                <Grid
-                    xs={5}
-                    sm={5}
-                    md={6}
-                    item
-                    sx={{ textAlign: 'right', marginTop: '2rem' }}
-                >
-                    <Box sx={{ textAlign: 'right' }}>
-                        <Rating
-                            name='half-rating-read'
-                            defaultValue={2.5}
-                            precision={0.5}
-                            readOnly
-                        />
-                    </Box>
-                    <Grid
-                        item
-                        sx={{
-                            color: 'primary.main',
-                            fontSize: '1.8rem',
-                            fontWeight: 700,
-                            textDecoration: '',
-                        }}
-                    >
-                        Category: {item.oneItem.category}
-                        {/* {item.oneItem.category.charAt(0).toUpperCase() +
-                            item.oneItem.category.slice(1)} */}
-                    </Grid>
-
-                    <Typography
-                        gutterBottom
-                        variant='h5'
-                        component='div'
-                        sx={{
-                            fontSize: '2rem',
-                        }}
-                    >
-                        {item.oneItem.title}
-                    </Typography>
-                    <Typography
-                        sx={{
-                            color: 'primary.main',
-                            fontSize: '2rem',
-                            fontWeight: 600,
-                        }}
-                        paragraph
-                    >
-                        ${item.oneItem.price}
-                    </Typography>
-
-                    <Box>
-                        <Button
-                            onClick={() => addToBasket(item.oneItem)}
-                            variant='contained'
-                            startIcon={<ShoppingCartRoundedIcon />}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Paper
+                            sx={{
+                                p: 2,
+                            }}
                         >
-                            Add to cart
-                        </Button>
-                    </Box>
-
+                            <Box
+                                xs={3}
+                                sm={4}
+                                md={4}
+                                sx={{
+                                    padding: '2rem',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <img
+                                    alt=''
+                                    src={item.oneItem.image}
+                                    width='100%'
+                                    height='auto'
+                                />
+                            </Box>
+                        </Paper>
+                    </Grid>
                     <Grid
-                        sx={{
-                            fontSize: '1.5rem',
-                        }}
                         item
+                        xs={12}
+                        sm={6}
+                        md={8}
+                        sx={{
+                            textAlign: 'right',
+                        }}
                     >
-                        <h3>Description:</h3>
-                        {item.oneItem.description}
+                        <Paper
+                            sx={{
+                                p: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                height: 'auto',
+                            }}
+                        >
+                            <Typography gutterBottom variant='h5'>
+                                {item.oneItem.title}
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    color: 'primary.main',
+                                    fontSize: '2rem',
+                                    fontWeight: 600,
+                                }}
+                                paragraph
+                            >
+                                ${item.oneItem.price}
+                            </Typography>
+
+                            <Box sx={{ marginBottom: '1rem' }}>
+                                <Button
+                                    onClick={() => addToBasket(item.oneItem)}
+                                    variant='contained'
+                                    startIcon={<ShoppingCartRoundedIcon />}
+                                >
+                                    Add to cart
+                                </Button>
+                            </Box>
+
+                            <Typography variant='h5'>Description:</Typography>
+                            <Typography variant='body1'>
+                                {item.oneItem.description}:
+                            </Typography>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Grid>
+            </Box>
         </>
     )
 }
