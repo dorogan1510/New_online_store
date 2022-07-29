@@ -8,9 +8,9 @@ password: m38rmF$
 
 ## Available functionality:
 
-### Different product categories
-### Search products
-### Add to cart
-### Pagination 
-### Login Logout
-### Rating of products
+- Different product categories
+- Search products
+- Add to cart
+- Pagination 
+- Login Logout
+- Rating of products
