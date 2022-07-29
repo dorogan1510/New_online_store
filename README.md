@@ -1,12 +1,14 @@
 # Online store with fake api
 
-You can sign in with this data:
-login: johnd
+## You can sign in with this data:
+
+login: johnd  
 password: m38rmF$
 
 
-## Available functionality
-### different product categories
+## Available functionality:
+
+### Different product categories
 ### Search products
 ### Add to cart
 ### Pagination 
