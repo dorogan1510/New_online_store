@@ -1,5 +1,7 @@
 # Online store with fake api
 
+I used fake api from [fakestoreapi.com](https://fakestoreapi.com/)
+
 ## You can sign in with this data:
 
 login: johnd  
