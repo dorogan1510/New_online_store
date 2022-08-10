@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 import { observer } from 'mobx-react-lite'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '..'
 import {
@@ -86,8 +86,8 @@ const NavBar = () => {
         navigate(SHOP)
     }
 
-    const [anchorElNav, setAnchorElNav] = React.useState(null)
-    const [anchorElUser, setAnchorElUser] = React.useState(null)
+    const [anchorElNav, setAnchorElNav] = useState(null)
+    const [anchorElUser, setAnchorElUser] = useState(null)
 
     const handleOpenNavMenu = event => {
         setAnchorElNav(event.currentTarget)
@@ -157,18 +157,18 @@ const NavBar = () => {
     }))
 
     return (
-        <Box>
-            <AppBar position='static'>
+        <Box sx={{ marginBottom: '4rem' }}>
+            <AppBar position='fixed'>
                 <Container maxWidth='xl'>
                     <Toolbar disableGutters>
-                        <AdbIcon
+                        {/* <AdbIcon
                             onClick={showAll}
                             sx={{
                                 display: { xs: 'none', md: 'flex' },
                                 mr: 1,
                                 cursor: 'pointer',
                             }}
-                        />
+                        /> */}
                         <Typography
                             variant='h6'
                             noWrap
@@ -185,7 +185,7 @@ const NavBar = () => {
                                 cursor: 'pointer',
                             }}
                         >
-                            LOGO
+                            STORE
                         </Typography>
 
                         <Box
@@ -246,14 +246,33 @@ const NavBar = () => {
                                 </MenuItem>
                             </Menu>
                         </Box>
-                        <AdbIcon
+                        <Typography
+                            variant='h6'
+                            noWrap
+                            component='a'
+                            onClick={showAll}
+                            sx={{
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                                cursor: 'pointer',
+                                display: { sm: 'flex', xs: 'none', md: 'none' },
+                                mr: 1,
+                                cursor: 'pointer',
+                            }}
+                        >
+                            STORE
+                        </Typography>
+                        {/* <AdbIcon
                             sx={{
                                 display: { xs: 'flex', md: 'none' },
                                 mr: 1,
                                 cursor: 'pointer',
                             }}
                             onClick={() => navigate(SHOP)}
-                        />
+                        /> */}
 
                         <Typography
                             variant='h5'

@@ -77,7 +77,7 @@ const Basket = () => {
                     component='h2'
                     variant='h5'
                     align='center'
-                    sx={{ marginTop: '3rem' }}
+                    sx={{ padding: '3rem' }}
                 >
                     THERE ARE NO ITEMS IN YOUR CART
                 </Typography>

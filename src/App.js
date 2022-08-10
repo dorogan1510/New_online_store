@@ -1,4 +1,4 @@
-import { Container, createTheme, ThemeProvider } from '@mui/material'
+import { Box, Container, createTheme, ThemeProvider } from '@mui/material'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
